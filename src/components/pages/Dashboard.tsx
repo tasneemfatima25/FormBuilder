@@ -72,7 +72,7 @@ function Dashboard() {
   useEffect(() => {
     if (confirmDeleteId) {
       document.body.style.overflow = 'hidden'
-  
+
       setTimeout(() => {
         modalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }, 100)
@@ -80,35 +80,52 @@ function Dashboard() {
       document.body.style.overflow = 'auto'
     }
   }, [confirmDeleteId])
-  
-  
-  
+
+  const handleStatusChange = async (formId: string, newStatus: string) => {
+    try {
+      const res = await axios.patch(
+        `https://formbuilderbackend-production.up.railway.app/api/forms/${formId}/status`,
+        { status: newStatus }
+      )
+
+      setForms(prev =>
+        prev.map(f => f._id === formId ? { ...f, status: newStatus as 'draft' | 'published' } : f)
+      )
+
+      toast.success(`✅ Status updated to ${newStatus}`)
+    } catch (err) {
+      console.error(err)
+      toast.error('❌ Failed to update status')
+    }
+  }
+
+
 
   return (
     <div className="min-h-screen my-10 bg-white/60 rounded-3xl backdrop-blur-2xl shadow-2xl py-10 px-6 sm:px-10 border">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
-  <div>
-    <h1 className="text-3xl sm:text-4xl font-bold text-gray-700">Forms List</h1>
-    <p className="text-gray-600 mt-1 sm:mt-2">Create, manage, and analyze your custom forms</p>
-  </div>
-  <Button
-    asChild
-    className="w-full sm:w-auto bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white px-5 py-3 rounded-full shadow-md"
-  >
-    <Link to="/builder/new" className="flex items-center justify-center gap-2">
-      <PlusCircle size={20} />
-      Create New Form
-    </Link>
-  </Button>
-</div>
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-700">Forms List</h1>
+            <p className="text-gray-600 mt-1 sm:mt-2">Create, manage, and analyze your custom forms</p>
+          </div>
+          <Button
+            asChild
+            className="w-full sm:w-auto bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white px-5 py-3 rounded-full shadow-md"
+          >
+            <Link to="/builder/new" className="flex items-center justify-center gap-2">
+              <PlusCircle size={20} />
+              Create New Form
+            </Link>
+          </Button>
+        </div>
 
         {/* Forms */}
         {loading ? (
           <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
-          <Loader />
-        </div>
+            <Loader />
+          </div>
         ) : forms.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {forms.map(form => (
@@ -121,7 +138,17 @@ function Dashboard() {
                   <h2 className="text-xl font-semibold text-[#189ab4] truncate mb-2">{form.title}</h2>
                   <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Status:</span>{" "}
-                    <span className="capitalize">{form.status}</span>
+                    <span
+                      className={`capitalize font-semibold ${form.status === 'published'
+                          ? 'text-green-600'
+                          : form.status === 'draft'
+                            ? 'text-yellow-600'
+                            : 'text-red-600'
+                        }`}
+                    >
+                      {form.status}
+                    </span>
+
                   </p>
                   <p className="text-sm text-gray-700 mb-1">
                     <span className="font-medium">Submissions:</span> {form.submissions}
@@ -166,8 +193,14 @@ function Dashboard() {
 
                   <Button
                     variant="outline"
-                    className="text-sm px-3 rounded-xl shadow-md"
+                    className={`text-sm px-3 rounded-xl shadow-md ${form.status !== 'published' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={form.status !== 'published'}
                     onClick={() => {
+                      if (form.status !== 'published') {
+                        toast.error('🚫 This form is not published yet')
+                        return
+                      }
+
                       navigator.clipboard.writeText(`${window.location.origin}/share/${form._id}`)
                       toast.success("🔗 Link copied to clipboard")
                     }}
@@ -179,6 +212,17 @@ function Dashboard() {
                     onClick={() => navigate(`/analytics/${form._id}`)}>
                     <LineChart size={16} className="mr-1" /> Analytics
                   </button>
+                  <select
+                    value={form.status}
+                    onChange={(e) => handleStatusChange(form._id, e.target.value)}
+                    className="text-sm px-3 py-2 rounded-xl shadow-md border bg-white text-gray-700 focus:outline-none"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="closed">Closed</option>
+                  </select>
+
+
                 </div>
               </div>
             ))}
@@ -194,20 +238,20 @@ function Dashboard() {
 
         {/* Delete Modal */}
         {confirmDeleteId && (
-  <div
-    ref={modalRef}
-    className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen transition-opacity duration-300"
-  >
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md z-[10000]">
-      <h2 className="text-xl font-bold text-gray-800 mb-2">Are you sure?</h2>
-      <p className="text-gray-600 mb-5">This action cannot be undone.</p>
-      <div className="flex justify-end gap-3">
-        <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>Cancel</Button>
-        <Button variant="destructive" onClick={handleDeleteConfirm}>Yes, Delete</Button>
-      </div>
-    </div>
-  </div>
-)}
+          <div
+            ref={modalRef}
+            className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen transition-opacity duration-300"
+          >
+            <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md z-[10000]">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Are you sure?</h2>
+              <p className="text-gray-600 mb-5">This action cannot be undone.</p>
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>Cancel</Button>
+                <Button variant="destructive" onClick={handleDeleteConfirm}>Yes, Delete</Button>
+              </div>
+            </div>
+          </div>
+        )}
 
 
       </div>

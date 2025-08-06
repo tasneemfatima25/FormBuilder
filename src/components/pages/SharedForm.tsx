@@ -31,7 +31,7 @@ function SharedForm() {
             setValue(field.id, '')
           }
         })
-       
+
       })
       .catch(() => toast.error('Form not found'))
   }, [id, setValue])
@@ -59,35 +59,55 @@ function SharedForm() {
     } catch (err: any) {
       console.error('❌ Submission error:', err)
       if (err.response?.data?.error === "Submission limit reached") {
-        setIsLimitReached(true) 
+        setIsLimitReached(true)
         toast.error("🚫 Submission limit reached")
-      }  else {
+      } else {
         toast.error('❌ Failed to submit form')
       }
-      
+
     }
   }
 
   if (isLimitReached) {
     return (
       <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-3xl border text-center">
-      <h2 className="text-3xl font-bold text-[#ff4d4f] mb-4">
-        🚫 Submission Limit Reached
-      </h2>
-      <p className="text-lg text-gray-800">
-        This form has reached its maximum number of allowed submissions.
-      </p>
-      <p className="text-md text-gray-600 mt-2">
-        If you think this is a mistake, please contact the form owner.
-      </p>
-    </div>
-    
+        <h2 className="text-3xl font-bold text-[#ff4d4f] mb-4">
+          🚫 Submission Limit Reached
+        </h2>
+        <p className="text-lg text-gray-800">
+          This form has reached its maximum number of allowed submissions.
+        </p>
+        <p className="text-md text-gray-600 mt-2">
+          If you think this is a mistake, please contact the form owner.
+        </p>
+      </div>
+
     )
   }
 
-  if (!form) return <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
-    <Loader />
-  </div>
+  if (!form) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    )
+  }
+
+  if (form.status === 'draft' || form.status === 'closed') {
+    return (
+      <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 text-center">
+        <h2 className="text-3xl font-bold text-[#e63946] mb-4">
+          🚫 This Form is Currently Unavailable
+        </h2>
+        <p className="text-lg text-gray-800">
+          This form is either in <span className="font-semibold">{form.status}</span> mode or not yet published.
+        </p>
+        <p className="text-md text-gray-600 mt-2">
+          Please contact the form owner if you believe this is a mistake.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="p-10 max-w-2xl mx-auto bg-gradient-to-br from-[#d8f3f7] to-[#c7eafc] backdrop-blur-2xl backdrop-blur-xl border-2 border-white rounded-3xl shadow-3xl border my-10">

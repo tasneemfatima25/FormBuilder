@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useForm, useController, Controller } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import Loader  from './Loader'
+import Loader from './Loader'
 
 function SharedForm() {
   const { id } = useParams()
@@ -67,34 +67,55 @@ function SharedForm() {
     } catch (err: any) {
       console.error('❌ Submission error:', err)
       if (err.response?.data?.error === "Submission limit reached") {
-        setIsLimitReached(true) 
+        setIsLimitReached(true)
         toast.error("🚫 Submission limit reached")
-      }  else {
+      } else {
         toast.error('❌ Failed to submit form')
       }
-      
+
     }
   }
 
-  if (!form) return   <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
-  <Loader />
-</div>
-if (isLimitReached) {
-  return (
-    <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 text-center">
-    <h2 className="text-3xl font-bold text-[#e63946] mb-4">
-      🚫 Submission Limit Reached
-    </h2>
-    <p className="text-lg text-gray-800">
-      This form has reached its maximum number of allowed submissions.
-    </p>
-    <p className="text-md text-gray-600 mt-2">
-      If you believe this is an error, please contact the form owner.
-    </p>
-  </div>
-  
-  )
-}
+  if (!form) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    )
+  }
+
+  if (form.status === 'draft' || form.status === 'closed') {
+    return (
+      <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 text-center">
+        <h2 className="text-3xl font-bold text-[#e63946] mb-4">
+          🚫 This Form is Currently Unavailable
+        </h2>
+        <p className="text-lg text-gray-800">
+          This form is either in <span className="font-semibold">{form.status}</span> mode or not yet published.
+        </p>
+        <p className="text-md text-gray-600 mt-2">
+          Please contact the form owner if you believe this is a mistake.
+        </p>
+      </div>
+    )
+  }
+
+  if (isLimitReached) {
+    return (
+      <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 text-center">
+        <h2 className="text-3xl font-bold text-[#e63946] mb-4">
+          🚫 Submission Limit Reached
+        </h2>
+        <p className="text-lg text-gray-800">
+          This form has reached its maximum number of allowed submissions.
+        </p>
+        <p className="text-md text-gray-600 mt-2">
+          If you believe this is an error, please contact the form owner.
+        </p>
+      </div>
+
+    )
+  }
 
   return (
     <div className="p-10 max-w-2xl mx-auto bg-white/70 backdrop-blur-2xl backdrop-blur-xl rounded-3xl shadow-3xl border my-10">
@@ -126,8 +147,8 @@ if (isLimitReached) {
                   type={field.type === 'phone number' ? 'tel' : field.type}
                   placeholder={field.placeholder}
                   className={`w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 />
               )}
@@ -140,8 +161,8 @@ if (isLimitReached) {
                     required: field.required ? 'Please select an option' : false
                   })}
                   className={`w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 >
                   <option value="">Select...</option>
@@ -210,8 +231,8 @@ if (isLimitReached) {
                     required: field.required ? 'Please upload a file' : false
                   })}
                   className={`w-full border px-4 py-2 rounded-lg bg-white focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 />
               )}
