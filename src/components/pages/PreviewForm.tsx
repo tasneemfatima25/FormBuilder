@@ -8,7 +8,10 @@ import Loader  from './Loader'
 function SharedForm() {
   const { id } = useParams()
   const [form, setForm] = useState<any>(null)
+  const [isLimitReached, setIsLimitReached] = useState(false)
+
   const navigate = useNavigate()
+
 
   const { handleSubmit, control, setValue, getValues, register, formState: { errors } } = useForm({
     mode: 'onSubmit'
@@ -19,7 +22,6 @@ function SharedForm() {
       .then(res => {
         setForm(res.data)
 
-        // ✅ Initialize values for controlled components
         res.data.fields.forEach((field: any) => {
           if (!field.id) {
             field.id = field.label?.toLowerCase().replace(/\s+/g, '_') || `field_${Math.random()}`
@@ -31,6 +33,13 @@ function SharedForm() {
             setValue(field.id, '')
           }
         })
+        if (
+          res.data.submissionLimit &&
+          res.data.submissions >= res.data.submissionLimit
+        ) {
+          toast.error("🚫 Submission limit reached");
+          navigate("/formlist"); // Or use navigate(-1) or show a custom message page
+        }
       })
       .catch(() => toast.error('Form not found'))
   }, [id, setValue])
@@ -57,13 +66,35 @@ function SharedForm() {
       navigate(`/response/${form._id}`)
     } catch (err: any) {
       console.error('❌ Submission error:', err)
-      toast.error('❌ Failed to submit form')
+      if (err.response?.data?.error === "Submission limit reached") {
+        setIsLimitReached(true) 
+        toast.error("🚫 Submission limit reached")
+      }  else {
+        toast.error('❌ Failed to submit form')
+      }
+      
     }
   }
 
   if (!form) return   <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
   <Loader />
 </div>
+if (isLimitReached) {
+  return (
+    <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 text-center">
+    <h2 className="text-3xl font-bold text-[#e63946] mb-4">
+      🚫 Submission Limit Reached
+    </h2>
+    <p className="text-lg text-gray-800">
+      This form has reached its maximum number of allowed submissions.
+    </p>
+    <p className="text-md text-gray-600 mt-2">
+      If you believe this is an error, please contact the form owner.
+    </p>
+  </div>
+  
+  )
+}
 
   return (
     <div className="p-10 max-w-2xl mx-auto bg-white/70 backdrop-blur-2xl backdrop-blur-xl rounded-3xl shadow-3xl border my-10">

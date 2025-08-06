@@ -61,11 +61,9 @@ function FormSettings() {
     setSaving(true)
     try {
       if (formId && formId !== 'new') {
-        // ✅ Update existing form
         await axios.put(`https://formbuilderbackend-production.up.railway.app/api/setting/${formId}`, payload)
         toast.success('✅ Form updated successfully')
       } else {
-        // ✅ Only create if new
         const res = await axios.post(`https://formbuilderbackend-production.up.railway.app/api/setting`, payload)
         toast.success('✅ Form created successfully')
         navigate(`/formlist`) 

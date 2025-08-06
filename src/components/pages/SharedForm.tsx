@@ -8,6 +8,7 @@ import Loader from './Loader'
 function SharedForm() {
   const { id } = useParams()
   const [form, setForm] = useState<any>(null)
+  const [isLimitReached, setIsLimitReached] = useState(false)
   const navigate = useNavigate()
 
   const { handleSubmit, control, setValue, getValues, register, formState: { errors } } = useForm({
@@ -30,6 +31,7 @@ function SharedForm() {
             setValue(field.id, '')
           }
         })
+       
       })
       .catch(() => toast.error('Form not found'))
   }, [id, setValue])
@@ -56,8 +58,31 @@ function SharedForm() {
       navigate(`/responsed/${form._id}`)
     } catch (err: any) {
       console.error('❌ Submission error:', err)
-      toast.error('❌ Failed to submit form')
+      if (err.response?.data?.error === "Submission limit reached") {
+        setIsLimitReached(true) 
+        toast.error("🚫 Submission limit reached")
+      }  else {
+        toast.error('❌ Failed to submit form')
+      }
+      
     }
+  }
+
+  if (isLimitReached) {
+    return (
+      <div className="max-w-2xl mx-auto mt-20 p-10 bg-white/20 backdrop-blur-xl rounded-3xl shadow-3xl border text-center">
+      <h2 className="text-3xl font-bold text-[#ff4d4f] mb-4">
+        🚫 Submission Limit Reached
+      </h2>
+      <p className="text-lg text-gray-800">
+        This form has reached its maximum number of allowed submissions.
+      </p>
+      <p className="text-md text-gray-600 mt-2">
+        If you think this is a mistake, please contact the form owner.
+      </p>
+    </div>
+    
+    )
   }
 
   if (!form) return <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">

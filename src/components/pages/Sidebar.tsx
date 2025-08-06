@@ -14,6 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <>
+      {/* Overlay on mobile */}
       <div
         className={clsx(
           'fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden',
