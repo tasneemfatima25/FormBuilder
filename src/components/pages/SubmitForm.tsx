@@ -25,7 +25,7 @@ function SubmitForm() {
     e.preventDefault()
     try {
       await axios.post(`/api/forms/${id}/submit`, values)
-      alert("✅ Form submitted!")
+      alert("Form submitted!")
     } catch (err) {
       console.error(err)
       alert("❌ Submission failed")

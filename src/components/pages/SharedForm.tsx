@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useForm, useController, Controller } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import Loader from './Loader'
 
 function SharedForm() {
   const { id } = useParams()
@@ -18,7 +19,6 @@ function SharedForm() {
       .then(res => {
         setForm(res.data)
 
-        // ✅ Initialize values for controlled components
         res.data.fields.forEach((field: any) => {
           if (!field.id) {
             field.id = field.label?.toLowerCase().replace(/\s+/g, '_') || `field_${Math.random()}`
@@ -52,7 +52,7 @@ function SharedForm() {
         data,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
-      toast.success('✅ Form submitted successfully')
+      toast.success('Form submitted successfully')
       navigate(`/responsed/${form._id}`)
     } catch (err: any) {
       console.error('❌ Submission error:', err)
@@ -60,7 +60,9 @@ function SharedForm() {
     }
   }
 
-  if (!form) return <p className="text-center mt-10 text-gray-600">Loading...</p>
+  if (!form) return <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
+    <Loader />
+  </div>
 
   return (
     <div className="p-10 max-w-2xl mx-auto bg-gradient-to-br from-[#d8f3f7] to-[#c7eafc] backdrop-blur-2xl backdrop-blur-xl border-2 border-white rounded-3xl shadow-3xl border my-10">
@@ -92,8 +94,8 @@ function SharedForm() {
                   type={field.type === 'phone number' ? 'tel' : field.type}
                   placeholder={field.placeholder}
                   className={`w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 />
               )}
@@ -106,8 +108,8 @@ function SharedForm() {
                     required: field.required ? 'Please select an option' : false
                   })}
                   className={`w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 >
                   <option value="">Select...</option>
@@ -176,8 +178,8 @@ function SharedForm() {
                     required: field.required ? 'Please upload a file' : false
                   })}
                   className={`w-full border px-4 py-2 rounded-lg bg-white focus:outline-none focus:ring-2 ${errors[fieldName]
-                      ? 'border-red-500 focus:ring-red-300'
-                      : 'border-gray-300 focus:ring-blue-300'
+                    ? 'border-red-500 focus:ring-red-300'
+                    : 'border-gray-300 focus:ring-blue-300'
                     }`}
                 />
               )}
@@ -193,8 +195,7 @@ function SharedForm() {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-[#189ab4] hover:bg-[#168aad] text-white text-base rounded-xl shadow-md py-2"
-          >
+            className="w-full bg-[#189ab4] hover:bg-[#168aad] text-white text-base rounded-xl shadow-md py-2">
             Submit
           </button>
         </div>

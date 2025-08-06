@@ -10,6 +10,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js'
+import Loader from './Loader'
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
@@ -81,19 +82,19 @@ function AnalyticsDashboard() {
     }
 
     return (
-        <div className="p-10 bg-white/70 shadow-xl rounded-3xl max-w-5xl mx-auto">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-3xl font-bold text-gray-700">Dashboard Overview</h2>
-                <button
-                    onClick={downloadExcel}
-                    className="bg-[#189ab4] hover:bg-[#168aad] text-white px-4 py-2 rounded-md shadow"
-                >
-                    Download CSV
-                </button>
-            </div>
+        <div className="p-10 bg-white/70 shadow-xl rounded-3xl max-w-5xl mx-auto my-10">
+            <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
+        <h2 className="text-3xl font-bold text-gray-700">Dashboard Overview</h2>
+        <button
+          onClick={downloadExcel}
+          className="bg-[#189ab4] hover:bg-[#168aad] text-white px-4 py-2 rounded-md shadow"
+        >
+          Download CSV
+        </button>
+      </div>
 
             {loading ? (
-                <p>Loading analytics...</p>
+               <Loader />
             ) : (
                 <>
                     <Bar data={chartData} options={options} />

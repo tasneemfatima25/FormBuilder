@@ -7,8 +7,6 @@ function ResponsePage() {
   const [thankYou, setThankYou] = useState<string>('Thank you for your submission!')
 const [description, setDescription] = useState<string>('')
 
-const [loading, setLoading] = useState(true)
-const [error, setError] = useState('')
 
 useEffect(() => {
   if (!formId) return

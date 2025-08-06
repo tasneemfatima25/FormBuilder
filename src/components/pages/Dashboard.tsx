@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { ClipboardCopy, Eye, LineChart, Pen, PlusCircle, Trash2, CopyPlus } from 'lucide-react'
+import Loader from './Loader'
 
 interface Form {
   _id: string
@@ -18,6 +19,8 @@ function Dashboard() {
   const [forms, setForms] = useState<Form[]>([])
   const [loading, setLoading] = useState(false)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+
   const navigate = useNavigate()
 
   const fetchForms = async () => {
@@ -66,26 +69,46 @@ function Dashboard() {
       toast.error('❌ Failed to duplicate form')
     }
   }
+  useEffect(() => {
+    if (confirmDeleteId) {
+      document.body.style.overflow = 'hidden'
+  
+      setTimeout(() => {
+        modalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 100)
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [confirmDeleteId])
+  
+  
+  
 
   return (
-    <div className="min-h-screen  bg-white/60 rounded-3xl backdrop-blur-2xl shadow-2xl py-10 px-6 sm:px-10 border">
+    <div className="min-h-screen my-10 bg-white/60 rounded-3xl backdrop-blur-2xl shadow-2xl py-10 px-6 sm:px-10 border">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-700">Forms List</h1>
-            <p className="text-gray-600 mt-2">Create, manage, and analyze your custom forms</p>
-          </div>
-          <Button asChild className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white px-5 py-3 rounded-full shadow-md">
-            <Link to="/builder/new" className="flex items-center gap-2">
-              <PlusCircle size={20} />
-              Create New Form
-            </Link>
-          </Button>
-        </div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
+  <div>
+    <h1 className="text-3xl sm:text-4xl font-bold text-gray-700">Forms List</h1>
+    <p className="text-gray-600 mt-1 sm:mt-2">Create, manage, and analyze your custom forms</p>
+  </div>
+  <Button
+    asChild
+    className="w-full sm:w-auto bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white px-5 py-3 rounded-full shadow-md"
+  >
+    <Link to="/builder/new" className="flex items-center justify-center gap-2">
+      <PlusCircle size={20} />
+      Create New Form
+    </Link>
+  </Button>
+</div>
+
         {/* Forms */}
         {loading ? (
-          <p className="text-gray-500 text-center">⏳ Loading forms...</p>
+          <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
+          <Loader />
+        </div>
         ) : forms.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {forms.map(form => (
@@ -125,7 +148,6 @@ function Dashboard() {
                   <button
                     className="flex items-center gap-1 text-sm px-3 rounded-xl text-red-500 border border-red-500 hover:bg-red-100 shadow-md"
                     onClick={() => {
-                      console.log("Delete clicked:", form._id)
                       setConfirmDeleteId(form._id)
                     }}
                   >
@@ -172,17 +194,21 @@ function Dashboard() {
 
         {/* Delete Modal */}
         {confirmDeleteId && (
-          <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
-            <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md z-[10000]">
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Are you sure?</h2>
-              <p className="text-gray-600 mb-5">This action cannot be undone.</p>
-              <div className="flex justify-end gap-3">
-                <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeleteConfirm}>Yes, Delete</Button>
-              </div>
-            </div>
-          </div>
-        )}
+  <div
+    ref={modalRef}
+    className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen transition-opacity duration-300"
+  >
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md z-[10000]">
+      <h2 className="text-xl font-bold text-gray-800 mb-2">Are you sure?</h2>
+      <p className="text-gray-600 mb-5">This action cannot be undone.</p>
+      <div className="flex justify-end gap-3">
+        <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>Cancel</Button>
+        <Button variant="destructive" onClick={handleDeleteConfirm}>Yes, Delete</Button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       </div>
     </div>

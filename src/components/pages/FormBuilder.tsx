@@ -69,7 +69,6 @@ function FormBuilder() {
   const handleDragEnd = (event: DragEndEvent) => {
 
     const { active, over } = event
-    console.log("Dragging:", active.id, "Over:", over?.id)
   
     if (!over || active.id === over.id) return
   
@@ -115,7 +114,6 @@ function FormBuilder() {
       fields: cleanedFields,
       status: 'draft'
     };
-    console.log('Payload:', JSON.stringify(payload, null, 2))
 
     
   
@@ -145,7 +143,7 @@ function FormBuilder() {
   };
   
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-white/50 backdrop-blur-lg rounded-3xl shadow-xl">
+    <div className="p-8 max-w-4xl mx-auto bg-white/50 backdrop-blur-lg rounded-3xl shadow-xl my-10">
     {/* Header */}
     <div className="mb-8">
       <h2 className="text-4xl font-bold text-gray-700 mb-1">

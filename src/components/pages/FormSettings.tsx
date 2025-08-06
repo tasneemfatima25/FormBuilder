@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { toast } from 'react-hot-toast'
+import Loader  from './Loader'
 
 function FormSettings() {
   const { formId } = useParams()
@@ -11,7 +12,7 @@ function FormSettings() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [fields, setFields] = useState([]); // ✅ This was missing
+  const [fields, setFields] = useState([]); 
 
 
   const [title, setTitle] = useState('')
@@ -28,12 +29,12 @@ function FormSettings() {
 
     axios.get(`https://formbuilderbackend-production.up.railway.app/api/setting/${formId}`)
     .then(res => {
-      const { title, description, thankYouMessage, submissionLimit, fields } = res.data; // ✅ get fields too
+      const { title, description, thankYouMessage, submissionLimit, fields } = res.data; 
       setTitle(title || '');
       setDescription(description || '');
       setThankYouMessage(thankYouMessage || '');
       setSubmissionLimit(submissionLimit || '');
-      setFields(fields || []); // ✅ set fields
+      setFields(fields || []); 
     })
       .catch(err => {
         console.error('Failed to fetch form:', err)
@@ -54,7 +55,7 @@ function FormSettings() {
       thankYouMessage: thankYouMessage.trim(), 
       submissionLimit: submissionLimit === '' ? undefined : Number(submissionLimit),
       fields: fields, 
-      status: 'draft' // or 'published' as needed
+      status: 'draft' 
     }
 
     setSaving(true)
@@ -62,7 +63,6 @@ function FormSettings() {
       const response = await axios.post('https://formbuilderbackend-production.up.railway.app/api/setting', payload)
       toast.success('✅ Form created successfully')
 
-      console.log('Form Response:', response.data)
       navigate(`/formlist`) 
     } catch (err) {
       console.error('Failed to save form:', err)
@@ -77,7 +77,7 @@ function FormSettings() {
       <h2 className="text-3xl font-bold text-gray-800 mb-6">Form Settings</h2>
 
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+      <Loader />
       ) : (
         <div className="space-y-4">
           <div>

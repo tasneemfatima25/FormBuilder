@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useForm, useController, Controller } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import Loader  from './Loader'
 
 function SharedForm() {
   const { id } = useParams()
@@ -60,7 +61,9 @@ function SharedForm() {
     }
   }
 
-  if (!form) return <p className="text-center mt-10 text-gray-600">Loading...</p>
+  if (!form) return   <div className="fixed inset-0 z-[9999] bg-white/50 flex items-center justify-center h-screen">
+  <Loader />
+</div>
 
   return (
     <div className="p-10 max-w-2xl mx-auto bg-white/70 backdrop-blur-2xl backdrop-blur-xl rounded-3xl shadow-3xl border my-10">
@@ -193,8 +196,7 @@ function SharedForm() {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-[#189ab4] hover:bg-[#168aad] text-white text-base rounded-xl shadow-md py-2"
-          >
+            className="w-full bg-[#189ab4] hover:bg-[#168aad] text-white text-base rounded-xl shadow-md py-2">
             Submit
           </button>
         </div>
