@@ -32,7 +32,7 @@ function SharedForm() {
           }
         })
       })
-      .catch(() => alert('Form not found'))
+      .catch(() => toast.error('Form not found'))
   }, [id, setValue])
 
   const onSubmit = async (formValues: any) => {

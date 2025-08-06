@@ -125,7 +125,7 @@ function FormBuilder() {
         // Optional re-fetch before navigation
         const { data } = await axios.get(`https://formbuilderbackend-production.up.railway.app/api/forms/${id}`);
         if (data.fields.length > 0) {
-          navigate(`/shared/${id}`);
+          navigate(`/setting/${id}`);
         } else {
           toast.error("Fields missing after update. Try again.");
         }

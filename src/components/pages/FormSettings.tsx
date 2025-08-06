@@ -60,10 +60,19 @@ function FormSettings() {
 
     setSaving(true)
     try {
-      const response = await axios.post('https://formbuilderbackend-production.up.railway.app/api/setting', payload)
-      toast.success('✅ Form created successfully')
-
-      navigate(`/formlist`) 
+      if (formId && formId !== 'new') {
+        // ✅ Update existing form
+        await axios.put(`https://formbuilderbackend-production.up.railway.app/api/setting/${formId}`, payload)
+        toast.success('✅ Form updated successfully')
+      } else {
+        // ✅ Only create if new
+        const res = await axios.post(`https://formbuilderbackend-production.up.railway.app/api/setting`, payload)
+        toast.success('✅ Form created successfully')
+        navigate(`/formlist`) 
+        return
+      }
+  
+      navigate(`/formlist`)
     } catch (err) {
       console.error('Failed to save form:', err)
       toast.error('❌ Failed to save form')

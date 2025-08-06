@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 function SubmitForm() {
   const { id } = useParams()
@@ -12,7 +13,7 @@ function SubmitForm() {
     axios.get(`/api/forms/${id}`)
       .then(res => {
         setForm(res.data)
-        setFields(res.data.fields || []) // assuming fields are stored inside form
+        setFields(res.data.fields || []) 
       })
   }, [id])
 
@@ -25,10 +26,10 @@ function SubmitForm() {
     e.preventDefault()
     try {
       await axios.post(`/api/forms/${id}/submit`, values)
-      alert("Form submitted!")
+      toast.success("Form submitted!")
     } catch (err) {
       console.error(err)
-      alert("❌ Submission failed")
+      toast.error("❌ Submission failed")
     }
   }
 
