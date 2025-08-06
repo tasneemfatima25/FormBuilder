@@ -63,7 +63,7 @@ function FormSettings() {
       toast.success('✅ Form created successfully')
 
       console.log('Form Response:', response.data)
-      navigate(`/`) 
+      navigate(`/formlist`) 
     } catch (err) {
       console.error('Failed to save form:', err)
       toast.error('❌ Failed to save form')

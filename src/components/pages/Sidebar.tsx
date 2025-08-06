@@ -4,8 +4,8 @@ import { LayoutDashboard, ListTodo, FilePlus2, X } from 'lucide-react'
 import clsx from 'clsx'
 
 const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, path: '/AnalyticsDashboard' },
-  { label: 'Form List', icon: ListTodo, path: '/' },
+  { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { label: 'Form List', icon: ListTodo, path: '/formlist' },
   { label: 'Create Form', icon: FilePlus2, path: '/builder/new' }
 ]
 

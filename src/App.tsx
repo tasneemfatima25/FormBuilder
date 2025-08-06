@@ -19,7 +19,7 @@ function App() {
         <Toaster position="top-right" />
       <Routes>
       <Route path="/" element={<Layout />}>
-      <Route index element={<Dashboard />} />
+      <Route index element={<AnalyticsDashboard />} />
         <Route path="/builder/:id" element={<FormBuilder />} />
         <Route path="/formlist" element={<Dashboard />} />
         <Route path="/setting/:formId" element={<FormSettings />} />
@@ -27,7 +27,7 @@ function App() {
         <Route path="/submit/:id" element={<SubmitForm />} />
         <Route path="/preview/:id" element={<PreviewForm />} />
         <Route path="/shared/:id" element={<SharedForm />} />
-        <Route path="/AnalyticsDashboard" element={<AnalyticsDashboard />} />
+        <Route path="/" element={<AnalyticsDashboard />} />
         <Route path="/response/:formId" element={<ResponsePage />} />
         </Route>
         <Route path="/share/:id" element={<SharedForm />} />
