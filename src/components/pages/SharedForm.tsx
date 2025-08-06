@@ -14,7 +14,7 @@ function SharedForm() {
   })
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/forms/${id}`)
+    axios.get(`https://formbuilderbackend-production.up.railway.app/api/forms/${id}`)
       .then(res => {
         setForm(res.data)
 
@@ -48,7 +48,7 @@ function SharedForm() {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/subforms/${form._id}/submissions`,
+        `https://formbuilderbackend-production.up.railway.app/api/subforms/${form._id}/submissions`,
         data,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )

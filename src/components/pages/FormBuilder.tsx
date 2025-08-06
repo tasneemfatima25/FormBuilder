@@ -37,7 +37,7 @@ function FormBuilder() {
 
   useEffect(() => {
     if (id && id !== 'new') {
-      axios.get(`http://localhost:5000/api/forms/${id}`)
+      axios.get(`https://formbuilderbackend-production.up.railway.app/api/forms/${id}`)
         .then(res => {
           setTitle(res.data.title)
             const fieldsWithIds = res.data.fields.map((field: any) => ({
@@ -121,11 +121,11 @@ function FormBuilder() {
   
     try {
       if (id && id !== 'new') {
-        await axios.put(`http://localhost:5000/api/forms/${id}`, payload);
+        await axios.put(`https://formbuilderbackend-production.up.railway.app/api/forms/${id}`, payload);
         toast.success("Form updated");
     
         // Optional re-fetch before navigation
-        const { data } = await axios.get(`http://localhost:5000/api/forms/${id}`);
+        const { data } = await axios.get(`https://formbuilderbackend-production.up.railway.app/api/forms/${id}`);
         if (data.fields.length > 0) {
           navigate(`/shared/${id}`);
         } else {
@@ -133,7 +133,7 @@ function FormBuilder() {
         }
     
       } else {
-        const res = await axios.post('http://localhost:5000/api/forms', payload);
+        const res = await axios.post('https://formbuilderbackend-production.up.railway.app/api/forms', payload);
         toast.success('Form Created Successfully');
         navigate(`/setting/${res.data._id}`);
       }

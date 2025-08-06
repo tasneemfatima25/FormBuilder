@@ -26,7 +26,7 @@ function AnalyticsDashboard() {
     const fetchAnalytics = async () => {
         try {
             setLoading(true)
-            const res = await axios.get('http://localhost:5000/api/subforms/analytics')
+            const res = await axios.get('https://formbuilderbackend-production.up.railway.app/api/subforms/analytics')
             setData(res.data)
         } catch (error) {
             console.error('Failed to fetch analytics', error)

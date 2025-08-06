@@ -12,7 +12,7 @@ function Analytics() {
   useEffect(() => {
     if (!formId) return
 
-    axios.get(`http://localhost:5000/api/subforms/analytics/${formId}`, {
+    axios.get(`https://formbuilderbackend-production.up.railway.app/api/subforms/analytics/${formId}`, {
       headers: { 'Cache-Control': 'no-cache' }
     })
       .then(res => {

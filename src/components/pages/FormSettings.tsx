@@ -26,7 +26,7 @@ function FormSettings() {
       return
     }
 
-    axios.get(`http://localhost:5000/api/setting/${formId}`)
+    axios.get(`https://formbuilderbackend-production.up.railway.app/api/setting/${formId}`)
     .then(res => {
       const { title, description, thankYouMessage, submissionLimit, fields } = res.data; // ✅ get fields too
       setTitle(title || '');
@@ -59,7 +59,7 @@ function FormSettings() {
 
     setSaving(true)
     try {
-      const response = await axios.post('http://localhost:5000/api/setting', payload)
+      const response = await axios.post('https://formbuilderbackend-production.up.railway.app/api/setting', payload)
       toast.success('✅ Form created successfully')
 
       console.log('Form Response:', response.data)

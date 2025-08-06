@@ -23,7 +23,7 @@ function Dashboard() {
   const fetchForms = async () => {
     try {
       setLoading(true)
-      const res = await axios.get('http://localhost:5000/api/forms')
+      const res = await axios.get('https://formbuilderbackend-production.up.railway.app/api/forms')
       setForms(res.data)
     } catch (err) {
       console.error(err)
@@ -40,7 +40,7 @@ function Dashboard() {
   const handleDeleteConfirm = async () => {
     if (!confirmDeleteId) return
     try {
-      await axios.delete(`http://localhost:5000/api/forms/${confirmDeleteId}`)
+      await axios.delete(`https://formbuilderbackend-production.up.railway.app/api/forms/${confirmDeleteId}`)
       toast.success('Form deleted')
       setForms(prev => prev.filter(f => f._id !== confirmDeleteId))
       setConfirmDeleteId(null)
@@ -58,7 +58,7 @@ function Dashboard() {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/forms', newForm)
+      const res = await axios.post('https://formbuilderbackend-production.up.railway.app/api/forms', newForm)
       toast.success('📄 Form duplicated')
       setForms(prev => [res.data, ...prev])
     } catch (err) {

@@ -13,7 +13,7 @@ const [error, setError] = useState('')
 useEffect(() => {
   if (!formId) return
 
-  axios.get(`http://localhost:5000/api/setting/${formId}`)
+  axios.get(`https://formbuilderbackend-production.up.railway.app/api/setting/${formId}`)
     .then(res => {
       setThankYou(res.data?.thankYouMessage || 'Thank you for your response!')
       setDescription(res.data?.description || '')
